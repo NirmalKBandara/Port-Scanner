@@ -7,7 +7,9 @@ import (
 )
 
 func main()  {
-	host := "scanme.nmap.org"
+	var host string
+		fmt.Printf("Enter the website or IP to scan: ")
+		fmt.Scanln(&host)
 	port := "80"
 	address := host + ":" + port
 	conn, err := net.DialTimeout("tcp", address, 3*time.Second)
