@@ -12,7 +12,7 @@ func main()  {
 		fmt.Scanln(&host)
 	var openPorts[]int
 
-	for i := 1; i <= 100; i++ {
+	for i := 1; i <= 1024; i++ {
 		port := fmt.Sprintf("%d", i)
 		address := host + ":" + port
 		conn, err := net.DialTimeout("tcp", address, 500*time.Millisecond)
