@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"sync"
 	"time"
 )
 
@@ -12,18 +13,25 @@ func main()  {
 		fmt.Scanln(&host)
 	var openPorts[]int
 
+	var wg sync.WaitGroup
 	for i := 1; i <= 1024; i++ {
-		port := fmt.Sprintf("%d", i)
-		address := host + ":" + port
-		conn, err := net.DialTimeout("tcp", address, 500*time.Millisecond)
-		if err != nil {
-			// fmt.Printf("Port %s is CLOSED on %s\n", port, host)
-			continue
-		}
-		conn.Close()
-		openPorts = append(openPorts, i)
-		// fmt.Printf("Port %s is OPEN on %s\n", port, host)
+		wg.Add(1)
+
+		go func(j int) {
+
+			port := fmt.Sprintf("%d", j)
+			address := host + ":" + port
+			conn, err := net.DialTimeout("tcp", address, 500*time.Millisecond)
+			if err != nil {
+				return
+			}
+			openPorts = append(openPorts, j)
+			conn.Close()
+			fmt.Printf("Port %d is OPEN on %s\n", j, host)
+
+		}(i)
 	}
+	wg.Wait()
 	fmt.Printf("Scan complete! Open ports: %v\n", openPorts)
 
 
