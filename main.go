@@ -18,21 +18,18 @@ func main()  {
 		wg.Add(1)
 
 		go func(j int) {
-
+			defer wg.Done()
 			port := fmt.Sprintf("%d", j)
 			address := host + ":" + port
-			conn, err := net.DialTimeout("tcp", address, 500*time.Millisecond)
+			conn, err := net.DialTimeout("tcp", address, 1000*time.Millisecond)
 			if err != nil {
 				return
 			}
 			openPorts = append(openPorts, j)
 			conn.Close()
 			fmt.Printf("Port %d is OPEN on %s\n", j, host)
-
 		}(i)
 	}
 	wg.Wait()
 	fmt.Printf("Scan complete! Open ports: %v\n", openPorts)
-
-
 }
